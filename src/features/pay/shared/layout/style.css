@@ -1,0 +1,18 @@
+.ant-radio-wrapper {
+  border-bottom: 1px solid #00000010 !important;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  width: 100% !important;
+}
+
+.ant-radio-wrapper:first-child {
+  padding-top: 0 !important;
+}
+
+.ant-radio-wrapper .ant-radio-checked .ant-radio-inner {
+  border: 5px solid #e1edff !important;
+}
+
+.ant-radio-wrapper .ant-radio-inner::after {
+  background-color: #0569ff !important;
+}
