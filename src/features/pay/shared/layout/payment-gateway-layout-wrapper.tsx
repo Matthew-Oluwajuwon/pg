@@ -65,12 +65,12 @@ export const PaymentGatewayLayoutWrapper: FC<PaymentGatewayLayoutProps> = ({
     !data?.responseMessage?.toLowerCase().includes("successful");
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center">
+    <div className="relative flex flex-col items-center">
       {/* Background */}
-      <div className="absolute top-[4.5rem] inset-0 bg-[url('@/assets/images/ornament.jpg')] bg-no-repeat bg-top opacity-20 z-0" />
+      <div className="absolute top-[5rem] inset-0 bg-[url('@/assets/images/ornament.jpg')] bg-no-repeat bg-top opacity-20 z-0" />
 
       {/* Container */}
-      <div className="relative z-10 w-[65rem] p-10 rounded-lg input-box-shadow h-[90svh]">
+      <div className="relative z-10 w-[65rem] p-10 rounded-lg input-box-shadow mt-20">
         <h1 className="font-semibold text-2xl">{heading}</h1>
         <p className="text-sm text-[#0A0D13] mt-3 mb-8">{subtext}</p>
 

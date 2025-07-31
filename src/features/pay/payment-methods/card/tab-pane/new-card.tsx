@@ -1,11 +1,17 @@
-import { Button, Col, Form, Input, Row, Switch, Typography } from "antd";
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  Popconfirm,
+  Row,
+  Switch,
+  Typography,
+} from "antd";
 import { useCardInfo, useDisableEvent } from "../hooks";
-import { emitter, formatPrice } from "@/lib";
-import { useEffect, useState } from "react";
-import type { PaymentInfoData } from "@/features/pay/api";
+import { formatPrice } from "@/lib";
 
 export const NewCard = () => {
-  const [paymentInfo, setPaymentInfo] = useState<PaymentInfoData>();
   const { cardNumberInputRef, cvvInputRef, expiryInputRef } = useDisableEvent();
 
   const {
@@ -14,19 +20,11 @@ export const NewCard = () => {
     getCardNumberMaxLength,
     validateExpiryDate,
     form,
+    paymentInfo,
+    isFormIncomplete,
     handleCardInput,
     handleCardExpiry,
   } = useCardInfo();
-
-  useEffect(() => {
-    const handlePaymentInfo = (data: PaymentInfoData) => {
-      setPaymentInfo(data);
-    };
-
-    emitter.on("payment-info:loaded", handlePaymentInfo);
-
-    return () => emitter.off("payment-info:loaded", handlePaymentInfo);
-  }, []);
 
   return (
     <Form
@@ -156,7 +154,13 @@ export const NewCard = () => {
           </Typography>
         </Col>
         <Col span={4}>
-          <Switch />
+          <Popconfirm
+            title="Are you sure you want to save this card?"
+            cancelText="No"
+            okText="Yes"
+          >
+            <Switch disabled={isFormIncomplete} />
+          </Popconfirm>
         </Col>
       </Row>
       <Col className="my-10">
