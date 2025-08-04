@@ -1,4 +1,3 @@
-// components/PaymentGatewayLayout.tsx
 import {
   useEffect,
   type FC,
@@ -10,7 +9,7 @@ import { Row, Typography } from "antd";
 import notFound from "@/assets/images/404.svg";
 import PayxyFooter from "/favicon.svg";
 import { useGetPaymentInfo, type PaymentInfoData } from "@/features";
-import { emitter } from "@/lib";
+import { useStore } from "@/lib";
 
 interface PaymentGatewayLayoutProps extends PropsWithChildren {
   heading?: string;
@@ -54,10 +53,11 @@ export const PaymentGatewayLayoutWrapper: FC<PaymentGatewayLayoutProps> = ({
   ),
 }) => {
   const { isLoading, isError, data } = useGetPaymentInfo();
+  const { setPaymentInfo } = useStore((state) => state);
 
   useEffect(() => {
-    emitter.emit("payment-info:loaded", data?.data as PaymentInfoData);
-  }, [data?.data]);
+    setPaymentInfo(data?.data as PaymentInfoData);
+  }, [data?.data, setPaymentInfo]);
 
   const isFailed =
     isError ||
@@ -70,7 +70,7 @@ export const PaymentGatewayLayoutWrapper: FC<PaymentGatewayLayoutProps> = ({
       <div className="absolute top-[5rem] inset-0 bg-[url('@/assets/images/ornament.jpg')] bg-no-repeat bg-top opacity-20 z-0" />
 
       {/* Container */}
-      <div className="relative z-10 w-[65rem] p-10 rounded-lg input-box-shadow mt-20">
+      <div className="relative z-10 w-[60rem] p-10 rounded-lg input-box-shadow mt-20">
         <h1 className="font-semibold text-2xl">{heading}</h1>
         <p className="text-sm text-[#0A0D13] mt-3 mb-8">{subtext}</p>
 
@@ -79,7 +79,7 @@ export const PaymentGatewayLayoutWrapper: FC<PaymentGatewayLayoutProps> = ({
         ) : isFailed ? (
           <ErrorState message={data?.responseMessage ?? fallbackMessage} />
         ) : (
-          <div className="card-shadow p-10 pb-5 rounded-lg bg-white grid grid-cols-[15rem_1fr] gap-5">
+          <div className="card-shadow p-10 pb-5 rounded-lg bg-white grid grid-cols-[13rem_1fr] gap-5">
             {showSidebar && <SideBar paymentInfo={data?.data} />}
             <div className="flex flex-col border-l pl-10 border-[#00000010]">
               <div className="flex-1">{children}</div>

@@ -41,3 +41,67 @@ export interface Customization {
   footerLink: string;
   footerLogo: string;
 }
+
+export interface MakePaymentRequest {
+  transactionId?: string;
+  paymentType?: number;
+  mode?: number;
+  bankCode?: string;
+  accountNumber?: string;
+  accountName?: string;
+  cardNumber?: string;
+  cvv?: string;
+  expiryMonth?: string;
+  expiryYear?: string;
+  currency?: string;
+  country?: string;
+  amount?: string;
+  email?: string;
+  phoneNumber?: string;
+  firstName?: string;
+  lastName?: string;
+  ip?: string;
+  dateOfBirth?: string;
+  bvn?: string;
+  redirectUrl?: string;
+  billingZip?: string;
+  billingCity?: string;
+  deviceFingerPrint?: string;
+  billingAddress?: string;
+  billingState?: string;
+  billingCountry?: string;
+  pin?: string;
+  callbackUrl?: string;
+  productId?: string;
+  productDescription?: string;
+  pageKey?: string;
+  productKey?: string;
+  authenticationResend?: string;
+  merchantType?: number;
+  metaData?: string;
+  narration?: string;
+  merchantId?: number;
+  cardBrand?: string;
+  token?: string;
+  entryType?: number;
+  deviceInformation?: DeviceInformation;
+  walletOption?: string;
+  invoiceId?: string;
+  isRecurring?: boolean;
+  isStaticRoute?: number;
+  ussdString?: string;
+  encrypted?: string;
+  accessCode?: string;
+  cardHolderName?: string;
+}
+
+export interface DeviceInformation {
+  httpBrowserLanguage?: string;
+  httpBrowserJavaEnabled?: boolean;
+  httpBrowserJavaScriptEnabled?: boolean;
+  httpBrowserColorDepth?: number;
+  httpBrowserScreenHeight?: number;
+  httpBrowserScreenWidth?: number;
+  httpBrowserTimeDifference?: string;
+  userAgentBrowserValue?: string;
+}

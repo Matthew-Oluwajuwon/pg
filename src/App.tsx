@@ -29,13 +29,13 @@ const App = () => {
   }, []);
 
   return (
-    <AntdProvider>
-      <ReactQueryProvider>
+    <ReactQueryProvider>
+      <AntdProvider>
         <PaymentGatewayLayoutWrapper>
           {paymentContents[selectedPaymentMethodIndex].content}
         </PaymentGatewayLayoutWrapper>
-      </ReactQueryProvider>
-    </AntdProvider>
+      </AntdProvider>
+    </ReactQueryProvider>
   );
 };
 

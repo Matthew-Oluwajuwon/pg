@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import mastercard from "@/assets/images/mastercard.svg";
 import visa from "@/assets/images/visa.png";
 import verve from "@/assets/images/verve.png";
@@ -12,8 +12,7 @@ import { CardTypes } from "@/config";
 import type { RuleObject } from "antd/es/form";
 import type { Bin } from "./types";
 import { Form } from "antd";
-import type { PaymentInfoData } from "@/features";
-import { emitter } from "@/lib";
+import { useStore } from "@/lib";
 
 // Map card types to their images
 const cardImages: Record<string, string> = {
@@ -28,19 +27,9 @@ const cardImages: Record<string, string> = {
 };
 
 export const useCardInfo = () => {
-  const [paymentInfo, setPaymentInfo] = useState<PaymentInfoData>();
+  const { paymentInfo } = useStore((state) => state);
   const [form] = Form.useForm();
   const [cardType, setCardType] = useState("");
-
-  useEffect(() => {
-    const handlePaymentInfo = (data: PaymentInfoData) => {
-      setPaymentInfo(data);
-    };
-
-    emitter.on("payment-info:loaded", handlePaymentInfo);
-
-    return () => emitter.off("payment-info:loaded", handlePaymentInfo);
-  }, []);
 
   const formatCardNumber = (value: string) =>
     value

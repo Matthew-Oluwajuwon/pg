@@ -6,7 +6,7 @@ export const useGetPaymentInfo = () => {
   const reference = pathname.split("/")[1];
 
   return useHttpQuery<unknown, ApiResponse<PaymentInfoData>>({
-    queryKey: ["categories"],
+    queryKey: ["payment-info"],
     url: `/api/Payments/GetPaymentInfo/${reference}`,
     staleTime: 0,
     gcTime: 0,

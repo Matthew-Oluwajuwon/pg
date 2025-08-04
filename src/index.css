@@ -47,8 +47,8 @@ body {
 
 /* HTML: <div class="loader"></div> */
 .loader {
-  width: 40px;
-  padding: 8px;
+  width: 35px;
+  padding: 5px;
   aspect-ratio: 1;
   border-radius: 50%;
   background: #313ef7;
@@ -65,4 +65,63 @@ body {
   to {
     transform: rotate(1turn);
   }
+}
+
+/* HTML: <div class="loader"></div> */
+
+.payment-validator-loader {
+  width: 25px;
+  aspect-ratio: 1;
+  display: grid;
+  border-radius: 50%;
+  background:
+    linear-gradient(
+        0deg,
+        rgb(47 189 106 / 50%) 30%,
+        #0000 0 70%,
+        rgb(47 189 106 / 100%) 0
+      )
+      50%/8% 100%,
+    linear-gradient(
+        90deg,
+        rgb(47 189 106 / 25%) 30%,
+        #0000 0 70%,
+        rgb(47 189 106 / 75%) 0
+      )
+      50%/100% 8%;
+  background-repeat: no-repeat;
+  animation: l23 1s infinite steps(12);
+}
+
+.payment-validator-loader::before,
+.payment-validator-loader::after {
+  content: "";
+  grid-area: 1/1;
+  border-radius: 50%;
+  background: inherit;
+  opacity: 0.915;
+  transform: rotate(30deg);
+}
+
+.payment-validator-loader::after {
+  opacity: 0.83;
+  transform: rotate(60deg);
+}
+
+@keyframes l23 {
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+:where(.css-dev-only-do-not-override-7t2xvq).ant-modal-confirm
+  .ant-modal-confirm-body {
+  flex-direction: column !important;
+  align-items: center !important;
+}
+
+:where(.css-dev-only-do-not-override-7t2xvq).ant-modal-confirm
+  .ant-modal-confirm-title {
+  text-align: center !important;
+  color: #000000b2 !important;
 }
