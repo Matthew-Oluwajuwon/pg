@@ -16,24 +16,27 @@ export const useValidatePayment = () => {
 
   const { isPending, data, mutateAsync } = useHttpMutation<
     ValidatePaymentRequest,
-    unknown
+    { responseCode: string; responseMessage: string }
   >({
     url: "/api/Payments/ValidatePayment",
     headers: {
       Authorization: `Bearer ${paymentInfo?.token}`,
     },
-    // onSuccess: (data) => {
-    //   if (data?.responseCode === "04") {
-    //     message.error(data?.responseMessage);
-    //   }
-    // },
+    onSuccess: (data) => {
+      if (data?.responseCode === "04") {
+        modal.error({
+          ...errorModalProps(paymentInfo?.callbackUrl),
+          content: data?.responseMessage,
+        });
+      }
+    },
   });
 
   const onValidatePayment = useCallback(
     async (data: ValidatePaymentRequest) => {
       try {
         const response = await mutateAsync({
-          data: { ...data, entryType: 0, otp: "" },
+          data: { ...data, entryType: 0 },
         });
         return response;
       } catch (error) {

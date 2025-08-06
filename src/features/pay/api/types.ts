@@ -53,6 +53,7 @@ export interface MakePaymentRequest {
   cvv?: string;
   expiryMonth?: string;
   expiryYear?: string;
+  expiryDate?: string;
   currency?: string;
   country?: string;
   amount?: string;

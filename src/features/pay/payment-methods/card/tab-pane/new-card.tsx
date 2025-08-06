@@ -10,9 +10,11 @@ import {
 } from "antd";
 import { useCardInfo, useDisableEvent } from "../hooks";
 import { formatPrice } from "@/lib";
+import { useMakePayment } from "@/features";
 
 export const NewCard = () => {
   const { cardNumberInputRef, cvvInputRef, expiryInputRef } = useDisableEvent();
+  const { onMakePayment, isPending } = useMakePayment();
 
   const {
     cardNumberValidator,
@@ -30,6 +32,7 @@ export const NewCard = () => {
     <Form
       form={form}
       layout="vertical"
+      onFinish={onMakePayment}
       wrapperCol={{ span: 24 }}
       labelCol={{ span: 24 }}
       requiredMark="optional"
@@ -54,7 +57,7 @@ export const NewCard = () => {
           autoComplete="cc-number"
           ref={cardNumberInputRef}
           maxLength={getCardNumberMaxLength()}
-          minLength={getCardNumberMaxLength()}
+          // minLength={getCardNumberMaxLength()}
           onChange={handleCardInput}
           suffix={
             cardImg() ? (
@@ -67,7 +70,7 @@ export const NewCard = () => {
       </Form.Item>
       <Form.Item
         label="Cardholder Name"
-        name="cardholderName"
+        name="cardHolderName"
         className="!-my-5"
         rules={[{ required: true, message: "Cardholder name is required" }]}
       >
@@ -168,10 +171,21 @@ export const NewCard = () => {
           Enter your 4 digit card PIN
         </Typography>
         <Row justify="center" className="my-5">
-          <Input.OTP length={4} size="large" />
+          <Form.Item
+            name="pin"
+            rules={[{ required: true, message: "PIN is required" }]}
+          >
+            <Input.OTP length={4} size="large" />
+          </Form.Item>
         </Row>
       </Col>
-      <Button type="primary" htmlType="submit" size="large" block>
+      <Button
+        type="primary"
+        htmlType="submit"
+        loading={isPending}
+        size="large"
+        block
+      >
         Pay {formatPrice(paymentInfo?.amount as string, paymentInfo?.currency)}
       </Button>
     </Form>

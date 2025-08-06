@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useTimer } from "@/features";
 
 export const BankTransfer = () => {
-  const { timeRemaining } = useTimer(5);
+  const { timeRemaining } = useTimer(600);
 
   const { paymentInfo } = useStore((state) => state);
   const { onMakePayment, isPending, data } = useMakePayment();
@@ -22,7 +22,7 @@ export const BankTransfer = () => {
     return (
       <div className="flex flex-col items-center justify-center h-[30rem]">
         <div className="loader mb-5" />
-        <span>Processing please wait...</span>
+        <span>Fetching account details...</span>
       </div>
     );
   }
@@ -89,3 +89,7 @@ export const BankTransfer = () => {
     </div>
   );
 };
+
+//07 3d
+//06 otp
+//02 failed

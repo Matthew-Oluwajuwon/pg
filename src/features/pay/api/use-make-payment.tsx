@@ -41,12 +41,21 @@ export const useMakePayment = () => {
 
   const onMakePayment = useCallback(
     async (data: MakePaymentRequest) => {
+      const [expiryMonth, expiryYear] = data.expiryDate?.split("/") ?? ["", ""];
+      const cardNumber = data.cardNumber?.split(" ").join("");
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { expiryDate, ...rest } = data;
+
       try {
         const response = await mutateAsync({
           data: {
-            ...data,
+            ...rest,
             accessCode: paymentInfo?.reference,
             amount: paymentInfo?.amount,
+            ...(expiryMonth && { expiryMonth }),
+            ...(expiryYear && { expiryYear }),
+            ...(cardNumber && { cardNumber }),
             authenticationResend: "",
             billingAddress: "",
             billingCity: "",

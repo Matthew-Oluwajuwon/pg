@@ -18,7 +18,9 @@ export const useGetUSSDBanks = () => {
     staleTime: 0,
     gcTime: 0,
     enabled: true,
-    refetchOnReconnect: true,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     retry: false,
     select: (data) => data?.data,
   });

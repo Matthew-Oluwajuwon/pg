@@ -125,3 +125,8 @@ body {
   text-align: center !important;
   color: #000000b2 !important;
 }
+
+.ant-input-outlined:focus,
+.ant-input-outlined:focus-within {
+  box-shadow: none !important;
+}

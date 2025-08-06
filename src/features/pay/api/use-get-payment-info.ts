@@ -11,7 +11,9 @@ export const useGetPaymentInfo = () => {
     staleTime: 0,
     gcTime: 0,
     enabled: !!reference,
-    refetchOnReconnect: true,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     retry: false,
     select: (data) => data,
   });
