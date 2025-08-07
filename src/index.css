@@ -38,10 +38,7 @@ body {
   box-shadow: 0 4px 60px 0 #0000001a;
 }
 
-:where(.css-dev-only-do-not-override-4fpwrg).ant-form-vertical
-  .ant-form-item:not(.ant-form-item-horizontal)
-  .ant-form-item-label
-  > label {
+.ant-form-item-label > label {
   font-size: 12px !important;
 }
 
@@ -129,4 +126,19 @@ body {
 .ant-input-outlined:focus,
 .ant-input-outlined:focus-within {
   box-shadow: none !important;
+}
+
+.payment-background {
+  background-image: url("./assets/images/ornament.jpg");
+  position: relative;
+  z-index: 0;
+}
+
+.payment-background::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgb(255 255 255 / 60%);
+  z-index: -1;
+  pointer-events: none;
 }

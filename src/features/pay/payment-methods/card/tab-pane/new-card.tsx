@@ -36,7 +36,7 @@ export const NewCard = () => {
       wrapperCol={{ span: 24 }}
       labelCol={{ span: 24 }}
       requiredMark="optional"
-      className="!mb-10"
+      className="!mb-5"
     >
       <Form.Item
         label="Card Number"
@@ -51,13 +51,11 @@ export const NewCard = () => {
         ]}
       >
         <Input
-          size="large"
           placeholder="xxxx xxxx xxxx xxxx"
-          className="!text-[12px] !py-4"
+          className="!text-[12px] !py-3"
           autoComplete="cc-number"
           ref={cardNumberInputRef}
           maxLength={getCardNumberMaxLength()}
-          // minLength={getCardNumberMaxLength()}
           onChange={handleCardInput}
           suffix={
             cardImg() ? (
@@ -74,11 +72,7 @@ export const NewCard = () => {
         className="!-my-5"
         rules={[{ required: true, message: "Cardholder name is required" }]}
       >
-        <Input
-          size="large"
-          id="cardholderName"
-          className="!text-[12px] !py-4"
-        />
+        <Input id="cardholderName" className="!text-[12px] !py-3" />
       </Form.Item>
 
       <Row justify="space-between" className="mt-8">
@@ -109,11 +103,10 @@ export const NewCard = () => {
             ]}
           >
             <Input
-              size="large"
               placeholder="MM/YY"
               id="expiry"
               ref={expiryInputRef}
-              className="!text-[12px] !py-4"
+              className="!text-[12px] !py-3"
               onChange={handleCardExpiry}
               autoComplete="cc-exp"
             />
@@ -137,12 +130,11 @@ export const NewCard = () => {
             ]}
           >
             <Input
-              size="large"
               placeholder="123"
               id="cvv"
               ref={cvvInputRef}
               type="password"
-              className="!text-[12px] !py-4"
+              className="!text-[12px] !py-3"
             />
           </Form.Item>
         </Col>
@@ -166,7 +158,7 @@ export const NewCard = () => {
           </Popconfirm>
         </Col>
       </Row>
-      <Col className="my-10">
+      <Col className="mt-10">
         <Typography className="!text-center !text-[#535862] !text-[12px]">
           Enter your 4 digit card PIN
         </Typography>
@@ -175,17 +167,11 @@ export const NewCard = () => {
             name="pin"
             rules={[{ required: true, message: "PIN is required" }]}
           >
-            <Input.OTP length={4} size="large" />
+            <Input.OTP size="large" length={4} />
           </Form.Item>
         </Row>
       </Col>
-      <Button
-        type="primary"
-        htmlType="submit"
-        loading={isPending}
-        size="large"
-        block
-      >
+      <Button type="primary" htmlType="submit" loading={isPending} block>
         Pay {formatPrice(paymentInfo?.amount as string, paymentInfo?.currency)}
       </Button>
     </Form>

@@ -32,7 +32,7 @@ export const useMakePayment = () => {
     onSuccess: (data) => {
       if (data?.responseCode === "04") {
         modal.error({
-          ...errorModalProps(paymentInfo?.callbackUrl),
+          ...errorModalProps(paymentInfo?.callbackUrl, data),
           content: data?.responseMessage,
         });
       }
