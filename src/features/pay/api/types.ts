@@ -32,6 +32,13 @@ export interface PaymentInfoData {
   isPaymentPageCustomizationEnabled: boolean;
   customization: Customization;
   merchantCode: string;
+  firstName: string;
+  lastName: string;
+  billingCountry: string;
+  billingState: string;
+  billingZip: string;
+  billingCity: string;
+  billingAddress: string;
 }
 
 export interface Customization {
@@ -105,4 +112,33 @@ export interface DeviceInformation {
   httpBrowserScreenWidth?: number;
   httpBrowserTimeDifference?: string;
   userAgentBrowserValue?: string;
+}
+
+export interface MakePaymentResponse {
+  responseCode: string;
+  responseMessage: string;
+  authenticatePaymentResponseCode: string;
+  authenticatePaymentResponseMessage: string;
+  transactionId: string;
+  providerReference: string;
+  transactionNumber: string;
+  isWebhookUrlSet: boolean;
+  accountNumber: string;
+  accountName: string;
+  bankName: string;
+}
+
+export interface ValidatePaymentRequest {
+  transactionId: string;
+  providerReference: string;
+  otp?: string;
+  entryType?: number;
+}
+
+export interface ValidatePaymentResponse {
+  responseCode: string;
+  responseMessage: string;
+  orderReference: string;
+  chargedAmount: string;
+  providerReference: string;
 }

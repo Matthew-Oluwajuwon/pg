@@ -1,26 +1,13 @@
 import { errorModalProps, useHttpMutation, useStore } from "@/lib";
 import { App } from "antd";
 import { useCallback } from "react";
-import type { MakePaymentRequest } from "./types";
+import type { MakePaymentRequest, MakePaymentResponse } from "./types";
 import { AxiosError } from "axios";
-
-export interface MakePaymentResponse {
-  responseCode: string;
-  responseMessage: string;
-  authenticatePaymentResponseCode: string;
-  authenticatePaymentResponseMessage: string;
-  transactionId: string;
-  providerReference: string;
-  transactionNumber: string;
-  isWebhookUrlSet: boolean;
-  accountNumber: string;
-  accountName: string;
-  bankName: string;
-}
+import { encryptPayload } from "@/lib/utils/encryt-payload.utils";
 
 export const useMakePayment = () => {
   const { modal } = App.useApp();
-  const { paymentInfo } = useStore((state) => state);
+  const { paymentInfo, setMakePaymentSuccessful } = useStore((state) => state);
   const { isPending, data, mutateAsync } = useHttpMutation<
     MakePaymentRequest,
     MakePaymentResponse
@@ -30,22 +17,36 @@ export const useMakePayment = () => {
       Authorization: `Bearer ${paymentInfo?.token}`,
     },
     onSuccess: (data) => {
-      if (data?.responseCode === "04") {
+      if (
+        data?.responseCode === "04" ||
+        data?.authenticatePaymentResponseCode === "04" ||
+        data?.authenticatePaymentResponseCode === "02"
+      ) {
         modal.error({
           ...errorModalProps(paymentInfo?.callbackUrl, data),
-          content: data?.responseMessage,
+          content:
+            data?.responseMessage ??
+            data?.authenticatePaymentResponseMessage ??
+            "Unable to process transaction at this time",
         });
+      }
+
+      if (data?.responseCode === "06") {
+        setMakePaymentSuccessful(true);
       }
     },
   });
 
   const onMakePayment = useCallback(
     async (data: MakePaymentRequest) => {
-      const [expiryMonth, expiryYear] = data.expiryDate?.split("/") ?? ["", ""];
-      const cardNumber = data.cardNumber?.split(" ").join("");
+      const cardNumberJoined = data.cardNumber?.split(" ").join("");
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { expiryDate, ...rest } = data;
+      const { expiryDate, cardNumber, cvv, expiryMonth, expiryYear, ...rest } =
+        data;
+
+      const date = new Date();
+      const offset = date.getTimezoneOffset();
 
       try {
         const response = await mutateAsync({
@@ -53,9 +54,6 @@ export const useMakePayment = () => {
             ...rest,
             accessCode: paymentInfo?.reference,
             amount: paymentInfo?.amount,
-            ...(expiryMonth && { expiryMonth }),
-            ...(expiryYear && { expiryYear }),
-            ...(cardNumber && { cardNumber }),
             authenticationResend: "",
             billingAddress: "",
             billingCity: "",
@@ -69,24 +67,32 @@ export const useMakePayment = () => {
             dateOfBirth: "",
             deviceFingerPrint: "",
             deviceInformation: {
-              httpBrowserColorDepth: 0,
-              httpBrowserJavaEnabled: true,
+              httpBrowserColorDepth: window.screen.colorDepth,
+              httpBrowserJavaEnabled: window.navigator.javaEnabled(),
               httpBrowserJavaScriptEnabled: true,
               httpBrowserLanguage: navigator.language,
               httpBrowserScreenHeight: window.innerHeight,
               httpBrowserScreenWidth: window.innerWidth,
-              httpBrowserTimeDifference: "",
+              httpBrowserTimeDifference: offset?.toString(),
               userAgentBrowserValue: navigator.userAgent,
             },
             email: paymentInfo?.email,
-            encrypted: "",
+            encrypted: encryptPayload(
+              JSON.stringify({
+                cardNumber: cardNumberJoined ?? "",
+                cvv: data?.cvv ?? "",
+                expiryMonth: data?.expiryMonth ?? "",
+                expiryYear: data?.expiryYear ?? "",
+              }),
+              paymentInfo?.publicKey ?? "",
+            ),
             entryType: 0,
-            firstName: "John",
+            firstName: paymentInfo?.firstName,
             invoiceId: "",
             ip: "",
             isRecurring: false,
             isStaticRoute: 0,
-            lastName: "Doe",
+            lastName: paymentInfo?.lastName,
             merchantId: 0,
             merchantType: 0,
             metaData: "",
@@ -132,8 +138,11 @@ export const useMakePayment = () => {
       paymentInfo?.email,
       paymentInfo?.productDescription,
       paymentInfo?.productId,
+      paymentInfo?.publicKey,
       paymentInfo?.reference,
       paymentInfo?.transactionId,
+      paymentInfo?.firstName,
+      paymentInfo?.lastName,
     ],
   );
 

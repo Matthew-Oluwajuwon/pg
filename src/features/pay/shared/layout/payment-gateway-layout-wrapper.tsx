@@ -7,7 +7,7 @@ import {
 import { SideBar } from "./side-bar";
 import { Row, Typography } from "antd";
 import notFound from "@/assets/images/404.svg";
-import PayxyFooter from "/favicon.svg";
+import PayxyFooter from "@/assets/svgs/favicon.svg";
 import { useGetPaymentInfo, type PaymentInfoData } from "@/features";
 import { useStore } from "@/lib";
 
@@ -61,12 +61,13 @@ export const PaymentGatewayLayoutWrapper: FC<PaymentGatewayLayoutProps> = ({
 
   const isFailed =
     isError ||
+    !data?.data?.isActive ||
     data?.responseCode !== "00" ||
     !data?.responseMessage?.toLowerCase().includes("successful");
 
   return (
     <div className="relative flex flex-col items-center">
-      <div className="relative z-10 w-[60rem] p-10 !rounded-2xl bg-white input-box-shadow mt-20 bg-cover bg-center bg-no-repeat payment-background">
+      <div className="relative z-10 w-[60rem] p-6 pt-10 !rounded-2xl bg-white input-box-shadow mt-20 bg-cover bg-center bg-no-repeat payment-background">
         <h1 className="font-semibold text-2xl">{heading}</h1>
         <p className="text-sm text-[#0A0D13] mt-3 mb-8">{subtext}</p>
 

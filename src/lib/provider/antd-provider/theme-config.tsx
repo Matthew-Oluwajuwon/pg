@@ -1,6 +1,7 @@
 import type { ModalFuncProps, ThemeConfig } from "antd";
 import failed from "@/assets/svgs/failed.svg";
 import success from "@/assets/svgs/success.svg";
+import type { MakePaymentResponse, ValidatePaymentResponse } from "@/features";
 
 export const themeConfig: ThemeConfig = {
   token: {
@@ -20,11 +21,10 @@ export const themeConfig: ThemeConfig = {
 
 export const errorModalProps = (
   callbackUrl?: string,
-  data?: unknown,
+  data?: ValidatePaymentResponse | MakePaymentResponse,
 ): ModalFuncProps => {
   return {
     title: "Payment Failed",
-    // centered: true,
     okText: "Done",
     onOk: () => {
       if (window.self !== window.parent) {
@@ -52,11 +52,10 @@ export const errorModalProps = (
 
 export const successModalProps = (
   callbackUrl?: string,
-  data?: unknown,
+  data?: ValidatePaymentResponse,
 ): ModalFuncProps => {
   return {
     title: "Payment Successful",
-    // centered: true,
     okText: "Back To Store",
     onOk: () => {
       if (window.self !== window.parent) {

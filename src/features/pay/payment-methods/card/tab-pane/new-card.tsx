@@ -9,12 +9,16 @@ import {
   Typography,
 } from "antd";
 import { useCardInfo, useDisableEvent } from "../hooks";
-import { formatPrice } from "@/lib";
+import { formatPrice, useStore } from "@/lib";
 import { useMakePayment } from "@/features";
+import { OtpVerification } from "../otp-verification";
 
 export const NewCard = () => {
+  const { selectedSavedCard, isMakePaymentSuccessful } = useStore(
+    (state) => state,
+  );
   const { cardNumberInputRef, cvvInputRef, expiryInputRef } = useDisableEvent();
-  const { onMakePayment, isPending } = useMakePayment();
+  const { onMakePayment, isPending, data } = useMakePayment();
 
   const {
     cardNumberValidator,
@@ -24,15 +28,38 @@ export const NewCard = () => {
     form,
     paymentInfo,
     isFormIncomplete,
+    isSavingCard,
+    handleOnSavedCard,
     handleCardInput,
     handleCardExpiry,
   } = useCardInfo();
+
+  if (isMakePaymentSuccessful) {
+    return <OtpVerification makePaymentData={data} />;
+  }
 
   return (
     <Form
       form={form}
       layout="vertical"
-      onFinish={onMakePayment}
+      onFinish={(request) =>
+        onMakePayment({
+          cardNumber: selectedSavedCard
+            ? selectedSavedCard?.cardPan
+            : request?.cardNumber,
+          cardHolderName: selectedSavedCard
+            ? selectedSavedCard?.cardHolderName
+            : request?.cardHolderName,
+          expiryMonth: selectedSavedCard
+            ? selectedSavedCard?.expiryMonth
+            : request?.expiryDate.split("/")[0],
+          expiryYear: selectedSavedCard
+            ? selectedSavedCard?.expiryYear
+            : request?.expiryDate.split("/")[1],
+          cvv: request?.cvv,
+          pin: request?.pin,
+        })
+      }
       wrapperCol={{ span: 24 }}
       labelCol={{ span: 24 }}
       requiredMark="optional"
@@ -70,7 +97,6 @@ export const NewCard = () => {
         label="Cardholder Name"
         name="cardHolderName"
         className="!-my-5"
-        rules={[{ required: true, message: "Cardholder name is required" }]}
       >
         <Input id="cardholderName" className="!text-[12px] !py-3" />
       </Form.Item>
@@ -123,6 +149,10 @@ export const NewCard = () => {
                   if ((value?.length as number) < 3) {
                     return Promise.reject(new Error("CVV must be three digit"));
                   } else {
+                    const nextEle = document.getElementById(
+                      "pin",
+                    ) as HTMLInputElement | null;
+                    nextEle?.focus();
                     return Promise.resolve();
                   }
                 },
@@ -133,6 +163,8 @@ export const NewCard = () => {
               placeholder="123"
               id="cvv"
               ref={cvvInputRef}
+              maxLength={3}
+              minLength={3}
               type="password"
               className="!text-[12px] !py-3"
             />
@@ -153,11 +185,14 @@ export const NewCard = () => {
             title="Are you sure you want to save this card?"
             cancelText="No"
             okText="Yes"
+            okButtonProps={{ loading: isSavingCard }}
+            onConfirm={handleOnSavedCard}
           >
             <Switch disabled={isFormIncomplete} />
           </Popconfirm>
         </Col>
       </Row>
+
       <Col className="mt-10">
         <Typography className="!text-center !text-[#535862] !text-[12px]">
           Enter your 4 digit card PIN
@@ -167,11 +202,17 @@ export const NewCard = () => {
             name="pin"
             rules={[{ required: true, message: "PIN is required" }]}
           >
-            <Input.OTP size="large" length={4} />
+            <Input.OTP size="large" id="pin" length={4} mask="*" />
           </Form.Item>
         </Row>
       </Col>
-      <Button type="primary" htmlType="submit" loading={isPending} block>
+      <Button
+        type="primary"
+        htmlType="submit"
+        loading={isPending}
+        className="!py-8"
+        block
+      >
         Pay {formatPrice(paymentInfo?.amount as string, paymentInfo?.currency)}
       </Button>
     </Form>

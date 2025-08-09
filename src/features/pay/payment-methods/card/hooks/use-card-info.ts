@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import mastercard from "@/assets/images/mastercard.svg";
 import visa from "@/assets/images/visa.png";
 import verve from "@/assets/images/verve.png";
@@ -13,6 +13,7 @@ import type { RuleObject } from "antd/es/form";
 import type { Bin } from "./types";
 import { Form } from "antd";
 import { useStore } from "@/lib";
+import { useSavedCard } from "@/features";
 
 // Map card types to their images
 const cardImages: Record<string, string> = {
@@ -27,9 +28,10 @@ const cardImages: Record<string, string> = {
 };
 
 export const useCardInfo = () => {
-  const { paymentInfo } = useStore((state) => state);
+  const { paymentInfo, selectedSavedCard } = useStore((state) => state);
   const [form] = Form.useForm();
   const [cardType, setCardType] = useState("");
+  const { onSavedCard, isPending: isSavingCard } = useSavedCard();
 
   const formatCardNumber = (value: string) =>
     value
@@ -80,6 +82,8 @@ export const useCardInfo = () => {
     value: string,
   ): Promise<void> => {
     if (!value?.trim()) return Promise.resolve();
+    // if (!isNaN(parseInt(value)))
+    //   return Promise.reject(new Error("Invalid card number"));
 
     const formattedValue = value.replace(/\s+/g, "");
     const result = validateCardType(formattedValue, BIN.Bin);
@@ -150,11 +154,44 @@ export const useCardInfo = () => {
   const cardNumber = Form.useWatch("cardNumber", form);
   const expiryDate = Form.useWatch("expiryDate", form);
   const cvv = Form.useWatch("cvv", form);
+  const cardHolderName = Form.useWatch("cardHolderName", form);
+
+  // set selectedCard on form
+  useEffect(() => {
+    if (selectedSavedCard) {
+      form.setFieldsValue({
+        cardNumber: selectedSavedCard.cardPan,
+        cardHolderName: selectedSavedCard.cardHolderName,
+        expiryDate: `${selectedSavedCard.expiryMonth}/${selectedSavedCard.expiryYear}`,
+      });
+    } else {
+      form.resetFields();
+    }
+  }, [selectedSavedCard, form]);
 
   // Determine if all required fields are filled
   const isFormIncomplete = useMemo(() => {
     return !cardNumber || !expiryDate || !cvv;
   }, [cardNumber, expiryDate, cvv]);
+
+  const handleOnSavedCard = () => {
+    onSavedCard({
+      billingAddress: "",
+      billingCity: "",
+      billingCountry: "",
+      billingState: "",
+      billingZip: "",
+      cardBrand: cardType,
+      cardHolderName,
+      cardPan: cardNumber,
+      cvv,
+      email: paymentInfo?.email as string,
+      expiryMonth: expiryDate?.split("/")[0],
+      expiryYear: expiryDate?.split("/")[1],
+      firstname: "",
+      lastname: "",
+    });
+  };
 
   return {
     cardImg,
@@ -165,8 +202,15 @@ export const useCardInfo = () => {
     validateExpiryDate,
     handleCardInput,
     handleCardExpiry,
+    handleOnSavedCard,
+    isSavingCard,
     form,
     paymentInfo,
     isFormIncomplete,
+    cardNumber,
+    expiryDate,
+    cvv,
+    cardHolderName,
+    cardType,
   };
 };

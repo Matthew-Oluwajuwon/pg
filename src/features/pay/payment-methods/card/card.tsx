@@ -1,8 +1,10 @@
 import { ConfigProvider, Tabs, type TabsProps } from "antd";
 import "./style.css";
 import { NewCard, SavedCards } from "./tab-pane";
+import { useStore } from "@/lib";
 
 export const Card = () => {
+  const { cardOption, setCardOption } = useStore();
   const items: TabsProps["items"] = [
     {
       key: "1",
@@ -28,7 +30,13 @@ export const Card = () => {
         },
       }}
     >
-      <Tabs size="small" defaultActiveKey="1" items={items} />
+      <Tabs
+        size="small"
+        defaultActiveKey="1"
+        activeKey={cardOption}
+        onChange={setCardOption}
+        items={items}
+      />
     </ConfigProvider>
   );
 };
