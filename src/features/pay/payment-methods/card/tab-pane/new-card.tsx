@@ -188,7 +188,7 @@ export const NewCard = () => {
             okButtonProps={{ loading: isSavingCard }}
             onConfirm={handleOnSavedCard}
           >
-            <Switch disabled={isFormIncomplete} />
+            <Switch disabled={isFormIncomplete || !!selectedSavedCard} />
           </Popconfirm>
         </Col>
       </Row>

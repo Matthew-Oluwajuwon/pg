@@ -39,6 +39,7 @@ export interface PaymentInfoData {
   billingZip: string;
   billingCity: string;
   billingAddress: string;
+  phoneNumber?: string;
 }
 
 export interface Customization {

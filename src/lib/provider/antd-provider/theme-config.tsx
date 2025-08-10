@@ -25,7 +25,7 @@ export const errorModalProps = (
 ): ModalFuncProps => {
   return {
     title: "Payment Failed",
-    okText: "Done",
+    okText: callbackUrl ? "Done" : "Close Window",
     onOk: () => {
       if (window.self !== window.parent) {
         window.parent.postMessage(
@@ -40,6 +40,8 @@ export const errorModalProps = (
       }
       if (callbackUrl) {
         window.location.replace(callbackUrl);
+      } else {
+        window.close();
       }
     },
     icon: (<img src={failed} alt="failed-payment" />) as React.ReactNode,
@@ -56,7 +58,7 @@ export const successModalProps = (
 ): ModalFuncProps => {
   return {
     title: "Payment Successful",
-    okText: "Back To Store",
+    okText: callbackUrl ? "Back To Store" : "Close Window",
     onOk: () => {
       if (window.self !== window.parent) {
         window.parent.postMessage(
@@ -71,6 +73,8 @@ export const successModalProps = (
       }
       if (callbackUrl) {
         window.location.replace(callbackUrl);
+      } else {
+        window.close();
       }
     },
     icon: <img src={success} alt="failed-payment" />,

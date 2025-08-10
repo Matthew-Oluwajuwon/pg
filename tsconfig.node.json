@@ -12,7 +12,7 @@
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "noEmit": true,
-    "types": ["vitest"],
+    "types": ["vitest", "vitest/globals"],
 
     /* Linting */
     "strict": true,
