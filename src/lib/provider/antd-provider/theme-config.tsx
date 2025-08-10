@@ -2,6 +2,7 @@ import type { ModalFuncProps, ThemeConfig } from "antd";
 import failed from "@/assets/svgs/failed.svg";
 import success from "@/assets/svgs/success.svg";
 import type { MakePaymentResponse, ValidatePaymentResponse } from "@/features";
+import { isValidUrl } from "@/lib/utils";
 
 export const themeConfig: ThemeConfig = {
   token: {
@@ -25,7 +26,7 @@ export const errorModalProps = (
 ): ModalFuncProps => {
   return {
     title: "Payment Failed",
-    okText: callbackUrl ? "Done" : "Close Window",
+    okText: isValidUrl(callbackUrl) ? "Done" : "Close Window",
     onOk: () => {
       if (window.self !== window.parent) {
         window.parent.postMessage(
@@ -38,7 +39,7 @@ export const errorModalProps = (
         );
         return;
       }
-      if (callbackUrl) {
+      if (callbackUrl && isValidUrl(callbackUrl)) {
         window.location.replace(callbackUrl);
       } else {
         window.close();
@@ -58,7 +59,7 @@ export const successModalProps = (
 ): ModalFuncProps => {
   return {
     title: "Payment Successful",
-    okText: callbackUrl ? "Back To Store" : "Close Window",
+    okText: isValidUrl(callbackUrl) ? "Back To Store" : "Close Window",
     onOk: () => {
       if (window.self !== window.parent) {
         window.parent.postMessage(
@@ -71,7 +72,7 @@ export const successModalProps = (
         );
         return;
       }
-      if (callbackUrl) {
+      if (callbackUrl && isValidUrl(callbackUrl)) {
         window.location.replace(callbackUrl);
       } else {
         window.close();
