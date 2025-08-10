@@ -42,7 +42,7 @@ export const errorModalProps = (
       if (callbackUrl && isValidUrl(callbackUrl)) {
         window.location.replace(callbackUrl);
       } else {
-        window.close();
+        window.location.replace("about:blank");
       }
     },
     icon: (<img src={failed} alt="failed-payment" />) as React.ReactNode,
@@ -75,7 +75,7 @@ export const successModalProps = (
       if (callbackUrl && isValidUrl(callbackUrl)) {
         window.location.replace(callbackUrl);
       } else {
-        window.close();
+        window.location.replace("about:blank");
       }
     },
     icon: <img src={success} alt="failed-payment" />,
