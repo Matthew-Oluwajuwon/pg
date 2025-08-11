@@ -1,5 +1,6 @@
 import type { useMakePayment, useValidatePayment } from "@/features";
 import type { USSDBanks } from "../api";
+import { PAYMENT_METHODS_TYPE } from "@/config";
 
 export const useHandleBankChange = (
   onMakePayment: ReturnType<typeof useMakePayment>["onMakePayment"],
@@ -9,7 +10,7 @@ export const useHandleBankChange = (
     const selectedBank = JSON.parse(value) as USSDBanks;
 
     const response = await onMakePayment({
-      paymentType: 3,
+      paymentType: PAYMENT_METHODS_TYPE.USSD,
       ussdString: selectedBank.ussdString,
       bankCode: selectedBank.bankCode,
     });

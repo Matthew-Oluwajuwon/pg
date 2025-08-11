@@ -3,6 +3,7 @@ import failed from "@/assets/svgs/failed.svg";
 import success from "@/assets/svgs/success.svg";
 import type { MakePaymentResponse, ValidatePaymentResponse } from "@/features";
 import { isValidUrl } from "@/lib/utils";
+import { PAYMENT_RESULT_STATUS } from "@/config";
 
 export const themeConfig: ThemeConfig = {
   token: {
@@ -31,7 +32,7 @@ export const errorModalProps = (
       if (window.self !== window.parent) {
         window.parent.postMessage(
           {
-            status: "failed",
+            status: PAYMENT_RESULT_STATUS.FAILED,
             data,
             action: "payment-result",
           },
@@ -64,7 +65,7 @@ export const successModalProps = (
       if (window.self !== window.parent) {
         window.parent.postMessage(
           {
-            status: "success",
+            status: PAYMENT_RESULT_STATUS.SUCCESS,
             data,
             action: "payment-result",
           },

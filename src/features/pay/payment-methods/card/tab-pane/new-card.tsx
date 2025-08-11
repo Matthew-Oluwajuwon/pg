@@ -10,7 +10,6 @@ import {
 } from "antd";
 import { useCardInfo, useDisableEvent } from "../hooks";
 import { formatPrice, useStore } from "@/lib";
-import { useMakePayment } from "@/features";
 import { OtpVerification } from "../otp-verification";
 
 export const NewCard = () => {
@@ -18,7 +17,6 @@ export const NewCard = () => {
     (state) => state,
   );
   const { cardNumberInputRef, cvvInputRef, expiryInputRef } = useDisableEvent();
-  const { onMakePayment, isPending, data } = useMakePayment();
 
   const {
     cardNumberValidator,
@@ -29,6 +27,9 @@ export const NewCard = () => {
     paymentInfo,
     isFormIncomplete,
     isSavingCard,
+    isPending,
+    data,
+    handleCardPayment,
     handleOnSavedCard,
     handleCardInput,
     handleCardExpiry,
@@ -42,24 +43,7 @@ export const NewCard = () => {
     <Form
       form={form}
       layout="vertical"
-      onFinish={(request) =>
-        onMakePayment({
-          cardNumber: selectedSavedCard
-            ? selectedSavedCard?.cardPan
-            : request?.cardNumber,
-          cardHolderName: selectedSavedCard
-            ? selectedSavedCard?.cardHolderName
-            : request?.cardHolderName,
-          expiryMonth: selectedSavedCard
-            ? selectedSavedCard?.expiryMonth
-            : request?.expiryDate.split("/")[0],
-          expiryYear: selectedSavedCard
-            ? selectedSavedCard?.expiryYear
-            : request?.expiryDate.split("/")[1],
-          cvv: request?.cvv,
-          pin: request?.pin,
-        })
-      }
+      onFinish={handleCardPayment}
       wrapperCol={{ span: 24 }}
       labelCol={{ span: 24 }}
       requiredMark="optional"

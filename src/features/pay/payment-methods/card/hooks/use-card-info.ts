@@ -8,12 +8,12 @@ import maestro from "@/assets/images/maestro.png";
 import jcb from "@/assets/images/jcb.jpeg";
 import amex from "@/assets/images/amex.png";
 import BIN from "../bin.json";
-import { CardTypes } from "@/config";
+import { CardTypes, PAYMENT_METHODS_TYPE } from "@/config";
 import type { RuleObject } from "antd/es/form";
 import type { Bin } from "./types";
 import { Form } from "antd";
 import { useStore } from "@/lib";
-import { useSavedCard } from "@/features";
+import { useMakePayment, useSavedCard } from "@/features";
 
 // Map card types to their images
 const cardImages: Record<string, string> = {
@@ -29,6 +29,8 @@ const cardImages: Record<string, string> = {
 
 export const useCardInfo = () => {
   const { paymentInfo, selectedSavedCard } = useStore((state) => state);
+  const { onMakePayment, isPending, data } = useMakePayment();
+
   const [form] = Form.useForm();
   const [cardType, setCardType] = useState("");
   const { onSavedCard, isPending: isSavingCard } = useSavedCard();
@@ -193,6 +195,25 @@ export const useCardInfo = () => {
     });
   };
 
+  const handleCardPayment = (request: Record<string, string>) =>
+    onMakePayment({
+      cardNumber: selectedSavedCard
+        ? selectedSavedCard?.cardPan
+        : request?.cardNumber,
+      cardHolderName: selectedSavedCard
+        ? selectedSavedCard?.cardHolderName
+        : request?.cardHolderName,
+      expiryMonth: selectedSavedCard
+        ? selectedSavedCard?.expiryMonth
+        : request?.expiryDate.split("/")[0],
+      expiryYear: selectedSavedCard
+        ? selectedSavedCard?.expiryYear
+        : request?.expiryDate.split("/")[1],
+      cvv: request?.cvv,
+      pin: request?.pin,
+      paymentType: PAYMENT_METHODS_TYPE.CARD,
+    });
+
   return {
     cardImg,
     cardNumberValidator,
@@ -203,6 +224,7 @@ export const useCardInfo = () => {
     handleCardInput,
     handleCardExpiry,
     handleOnSavedCard,
+    handleCardPayment,
     isSavingCard,
     form,
     paymentInfo,
@@ -212,5 +234,7 @@ export const useCardInfo = () => {
     cvv,
     cardHolderName,
     cardType,
+    isPending,
+    data,
   };
 };

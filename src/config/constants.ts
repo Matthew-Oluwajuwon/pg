@@ -34,3 +34,18 @@ export const CardTypes = {
   MAESTRO: "maestro",
   NOT_FOUND: "",
 } as const;
+
+export const TEMPORARY_BANK_CODE = "044";
+
+export const PAYMENT_METHODS_TYPE = {
+  BANK_TRANSFER: 5,
+  CARD: 0,
+  USSD: 3,
+} as const;
+
+export const PAYMENT_RESULT_STATUS = {
+  SUCCESS: "SUCCESS",
+  FAILED: "FAILED",
+} as const;
+
+export const LOADING_MESSAGE = "Processing please wait...";

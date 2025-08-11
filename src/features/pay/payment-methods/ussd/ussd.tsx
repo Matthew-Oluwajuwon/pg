@@ -1,8 +1,7 @@
 import { Row, Select, Typography } from "antd";
 import { Copy } from "iconoir-react";
 import { useUSSD } from "./hooks";
-
-const LOADING_MESSAGE = "Processing please wait...";
+import { LOADING_MESSAGE } from "@/config";
 
 export const USSD = () => {
   const {
